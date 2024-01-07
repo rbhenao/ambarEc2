@@ -69,7 +69,7 @@ All the images required to run Ambar can be built locally. In general, each imag
 
 ```shell
 # From project root
-docker compose up --build
+docker-compose --env-file .env.local up --build
 ```
 
 ## Architecture
