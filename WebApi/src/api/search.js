@@ -32,6 +32,61 @@ export default ({ storage }) => {
      * @apiErrorExample {json} HTTP/1.1 400 BadRequest
      * HTTP/1.1 400 BadRequest
      */
+    /**
+     * @swagger
+     * tags:
+     *   - name: Search
+     *     description: API for searching documents
+     */
+    /**
+     * @swagger
+     * /api/search:
+     *   get:
+     *     summary: Search For Documents By Query
+     *     description: Returns documents matching the specified query.
+     *     tags:
+     *       - Search
+     *     parameters:
+     *       - in: query
+     *         name: query
+     *         description: URI_ENCODED query string. Check details of query syntax [here](https://blog.ambar.cloud/mastering-ambar-search-queries/).
+     *         required: true
+     *         schema:
+     *           type: string
+     *       - in: query
+     *         name: page
+     *         description: page to return
+     *         required: false
+     *         schema:
+     *           type: integer
+     *       - in: query
+     *         name: size
+     *         description: number of results to return per page. Maximum is 100.
+     *         required: false
+     *         schema:
+     *           type: integer
+     *     responses:
+     *       200:
+     *         description: Successful response with search results.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 hits:
+     *                   type: array
+     *                   items:
+     *                     type: object
+     *                     properties:
+     *                       download_uri:
+     *                         type: string
+     *                         description: Encrypted download URI for the document.
+     *                 took:
+     *                   type: number
+     *                   description: Time taken for the search operation in milliseconds.
+     *       400:
+     *         description: Bad Request. Invalid query, page, or size.
+     */
     api.get('/', (req, res, next) => {
         const { query: { query: queryStr, page: pageStr = DEFAULT_PAGE, size: sizeStr = DEFAULT_SIZE } } = req
         const page = parseInt(pageStr)
@@ -82,6 +137,31 @@ export default ({ storage }) => {
      * @apiErrorExample {json} HTTP/1.1 400 BadRequest
      * HTTP/1.1 400 BadRequest
      */
+    /**
+     * @swagger
+     * /api/search/tree:
+     *   get:
+     *     summary: Get documents tree by query
+     *     description: Returns documents tree structure based on the specified query.
+     *     tags:
+     *       - Search
+     *     parameters:
+     *       - in: query
+     *         name: query
+     *         description: URI_ENCODED query string. Check details of query syntax [here](https://blog.ambar.cloud/mastering-ambar-search-queries/).
+     *         required: true
+     *         schema:
+     *           type: string
+     *     responses:
+     *       200:
+     *         description: Successful response with documents tree.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *       400:
+     *         description: Bad Request. Invalid query.
+     */
     api.get('/tree', (req, res, next) => {
         const { query: { query: queryStr } } = req
         const query = decodeURI(queryStr)
@@ -114,6 +194,31 @@ export default ({ storage }) => {
      *
      * @apiErrorExample {json} HTTP/1.1 400 BadRequest
      * HTTP/1.1 400 BadRequest
+     */
+    /**
+     * @swagger
+     * /api/search/stats:
+     *   get:
+     *     summary: Get documents stats by query
+     *     description: Returns statistics for documents based on the specified query.
+     *     tags:
+     *       - Search
+     *     parameters:
+     *       - in: query
+     *         name: query
+     *         description: URI_ENCODED query string. Check details of query syntax [here](https://blog.ambar.cloud/mastering-ambar-search-queries/).
+     *         required: true
+     *         schema:
+     *           type: string
+     *     responses:
+     *       200:
+     *         description: Successful response with documents statistics.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *       400:
+     *         description: Bad Request. Invalid query.
      */
     api.get('/stats', (req, res, next) => {
         const { query: { query: queryStr } } = req
@@ -151,6 +256,40 @@ export default ({ storage }) => {
      *
      * @apiErrorExample {json} HTTP/1.1 400 BadRequest
      * HTTP/1.1 400 BadRequest
+     */
+    /**
+     * @swagger
+     * /api/search/{fileId}:
+     *   get:
+     *     summary: Retrieve File Highlight by Query and fileId
+     *     description: Get highlights for a specific file based on the query.
+     *     tags:
+     *       - Search
+     *     parameters:
+     *       - in: path
+     *         name: fileId
+     *         description: File ID.
+     *         required: true
+     *         schema:
+     *           type: string
+     *       - in: query
+     *         name: query
+     *         description: Query string.
+     *         required: true
+     *         schema:
+     *           type: string
+     *     responses:
+     *       200:
+     *         description: Successful response with file highlights.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 highlight:
+     *                   type: object
+     *       400:
+     *         description: Bad Request. Invalid query or file ID.
      */
     api.get('/:fileId', (req, res, next) => {
         const { params: { fileId: fileId }, query: { query: query } } = req
@@ -196,6 +335,37 @@ export default ({ storage }) => {
      * 
      * @apiErrorExample {json} HTTP/1.1 400 BadRequest
      * HTTP/1.1 400 BadRequest
+     */
+    /**
+     * @swagger
+     * /api/search/{fileId}/full:
+     *   get:
+     *     summary: Retrieve Full File Highlight by Query and fileId
+     *     description: Get full highlights for a specific file based on the query.
+     *     tags:
+     *       - Search
+     *     parameters:
+     *       - in: path
+     *         name: fileId
+     *         description: File ID.
+     *         required: true
+     *         schema:
+     *           type: string
+     *       - in: query
+     *         name: query
+     *         description: Query string.
+     *         required: true
+     *         schema:
+     *           type: string
+     *     responses:
+     *       200:
+     *         description: Successful response with full file highlights.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *       400:
+     *         description: Bad Request. Invalid query or file ID.
      */
     api.get('/:fileId/full', (req, res, next) => {
         const { params: { fileId: fileId }, query: { query: query } } = req

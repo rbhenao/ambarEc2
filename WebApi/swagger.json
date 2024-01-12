@@ -1,0 +1,863 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Ambar WebApi",
+    "version": "1.0.0",
+    "description": "The Ambar Cloud WebApi"
+  },
+  "paths": {
+    "/api/files/download": {
+      "get": {
+        "summary": "Download file by SHA or URL",
+        "description": "Download a file by its SHA or URL.",
+        "tags": [
+          "Files"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "path",
+            "description": "Path to the file (for URLs).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sha",
+            "description": "SHA256 hash of the file.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File download successful."
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "404": {
+            "description": "File content not found."
+          }
+        }
+      }
+    },
+    "/api/files/{id}": {
+      "get": {
+        "summary": "Download file by file ID",
+        "description": "Download a file by its ID.",
+        "tags": [
+          "Files"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "File ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File download successful."
+          },
+          "400": {
+            "description": "Uri is broken."
+          },
+          "404": {
+            "description": "File meta not found or file content not found."
+          }
+        }
+      }
+    },
+    "/api/files/{id}/text": {
+      "get": {
+        "summary": "Download parsed text by file ID",
+        "description": "Download parsed text of a file by its ID.",
+        "tags": [
+          "Files"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "File ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Parsed text download successful."
+          },
+          "400": {
+            "description": "Uri is broken."
+          },
+          "404": {
+            "description": "File meta not found or parsed content not found."
+          }
+        }
+      }
+    },
+    "/api/files/uiupload/{fileName}": {
+      "post": {
+        "summary": "Upload file from UI",
+        "description": "Upload a file from the UI.",
+        "tags": [
+          "Files"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fileName",
+            "description": "Name of the file.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "File to upload.",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "File upload successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "fileId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong request data."
+          },
+          "404": {
+            "description": "File meta or content not found."
+          }
+        }
+      }
+    },
+    "/api/files/hide/{fileId}": {
+      "put": {
+        "summary": "Hide file by file ID",
+        "description": "Hide a file by its ID.",
+        "tags": [
+          "Files"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fileId",
+            "description": "File ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File hide successful."
+          },
+          "404": {
+            "description": "File not found."
+          }
+        }
+      }
+    },
+    "/api/files/unhide/{fileId}": {
+      "put": {
+        "summary": "Unhide file by file ID",
+        "description": "Unhide a file by its ID.",
+        "tags": [
+          "Files"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fileId",
+            "description": "File ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File unhide successful."
+          },
+          "404": {
+            "description": "File not found."
+          }
+        }
+      }
+    },
+    "/api": {
+      "get": {
+        "summary": "Get information about the API",
+        "description": "Returns information about the API, including version, UI language, and raw configuration.",
+        "tags": [
+          "General"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with API information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "version": {
+                      "type": "string",
+                      "description": "The version of the API."
+                    },
+                    "uiLang": {
+                      "type": "string",
+                      "description": "The UI language used."
+                    },
+                    "rawConfig": {
+                      "type": "object",
+                      "description": "The raw configuration of the API."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "path": {
+      "/logs": {
+        "post": {
+          "summary": "Submit log record",
+          "description": "Submit a log record to the server.",
+          "tags": [
+            "Logs"
+          ],
+          "requestBody": {
+            "description": "LogItem object",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogItem"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful response"
+            }
+          }
+        },
+        "get": {
+          "summary": "Get log records",
+          "description": "Retrieve log records from the server.",
+          "tags": [
+            "Logs"
+          ],
+          "parameters": [
+            {
+              "name": "recordsCount",
+              "in": "query",
+              "description": "Number of records to retrieve",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100,
+                "default": 10
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response with log records",
+              "content": {
+                "application/json": "// Define the response schema here"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/search": {
+      "get": {
+        "summary": "Search For Documents By Query",
+        "description": "Returns documents matching the specified query.",
+        "tags": [
+          "Search"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "query",
+            "description": "URI_ENCODED query string. Check details of query syntax [here](https://blog.ambar.cloud/mastering-ambar-search-queries/).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "page to return",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "description": "number of results to return per page. Maximum is 100.",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with search results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "hits": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "download_uri": {
+                            "type": "string",
+                            "description": "Encrypted download URI for the document."
+                          }
+                        }
+                      }
+                    },
+                    "took": {
+                      "type": "number",
+                      "description": "Time taken for the search operation in milliseconds."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request. Invalid query, page, or size."
+          }
+        }
+      }
+    },
+    "/api/search/tree": {
+      "get": {
+        "summary": "Get documents tree by query",
+        "description": "Returns documents tree structure based on the specified query.",
+        "tags": [
+          "Search"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "query",
+            "description": "URI_ENCODED query string. Check details of query syntax [here](https://blog.ambar.cloud/mastering-ambar-search-queries/).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with documents tree.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request. Invalid query."
+          }
+        }
+      }
+    },
+    "/api/search/stats": {
+      "get": {
+        "summary": "Get documents stats by query",
+        "description": "Returns statistics for documents based on the specified query.",
+        "tags": [
+          "Search"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "query",
+            "description": "URI_ENCODED query string. Check details of query syntax [here](https://blog.ambar.cloud/mastering-ambar-search-queries/).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with documents statistics.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request. Invalid query."
+          }
+        }
+      }
+    },
+    "/api/search/{fileId}": {
+      "get": {
+        "summary": "Retrieve File Highlight by Query and fileId",
+        "description": "Get highlights for a specific file based on the query.",
+        "tags": [
+          "Search"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fileId",
+            "description": "File ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "query",
+            "description": "Query string.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with file highlights.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "highlight": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request. Invalid query or file ID."
+          }
+        }
+      }
+    },
+    "/api/search/{fileId}/full": {
+      "get": {
+        "summary": "Retrieve Full File Highlight by Query and fileId",
+        "description": "Get full highlights for a specific file based on the query.",
+        "tags": [
+          "Search"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fileId",
+            "description": "File ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "query",
+            "description": "Query string.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with full file highlights.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request. Invalid query or file ID."
+          }
+        }
+      }
+    },
+    "/api/stats": {
+      "get": {
+        "summary": "Get Statistics",
+        "description": "Retrieve statistics related to document processing, content types, and processing rates.",
+        "tags": [
+          "Stats"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with combined statistics.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "contentType": {
+                      "type": "object"
+                    },
+                    "procRate": {
+                      "type": "object"
+                    },
+                    "procTotal": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. Failed to retrieve statistics."
+          }
+        }
+      }
+    },
+    "/api/stats/combined": {
+      "get": {
+        "summary": "Get Combined Statistics",
+        "description": "Retrieve combined statistics for files based on a query.",
+        "tags": [
+          "Stats"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with combined statistics.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. Failed to retrieve combined statistics."
+          }
+        }
+      }
+    },
+    "/api/stats/processing": {
+      "get": {
+        "summary": "Get Processing Statistics",
+        "description": "Retrieve statistics related to document processing based on a query.",
+        "tags": [
+          "Stats"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with processing statistics.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. Failed to retrieve processing statistics."
+          }
+        }
+      }
+    },
+    "/api/tags": {
+      "get": {
+        "summary": "Get Tags",
+        "description": "Retrieve a list of tags along with the count of associated files.",
+        "tags": [
+          "Tags"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with an array of tags and their associated file counts.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the tag."
+                      },
+                      "filesCount": {
+                        "type": "integer",
+                        "description": "The count of files associated with the tag."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. Failed to retrieve tags."
+          }
+        }
+      }
+    },
+    "/api/tags/{fileId}/{tagType}/{tagName}": {
+      "post": {
+        "summary": "Add Tag For File",
+        "description": "Add a tag for a specific file.",
+        "tags": [
+          "Tags"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the file to add the tag to."
+          },
+          {
+            "in": "path",
+            "name": "tagType",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The type of the tag to add."
+          },
+          {
+            "in": "path",
+            "name": "tagName",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The name of the tag to add."
+          }
+        ],
+        "requestBody": {
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with updated tags.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request. Required field is missing or invalid tag type."
+          },
+          "500": {
+            "description": "Internal Server Error. Failed to add tag."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Tag From File",
+        "description": "Delete a tag from a specific file.",
+        "tags": [
+          "Tags"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the file to delete the tag from."
+          },
+          {
+            "in": "path",
+            "name": "tagType",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The type of the tag to delete."
+          },
+          {
+            "in": "path",
+            "name": "tagName",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The name of the tag to delete."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with updated tags.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request. Required field is missing."
+          },
+          "500": {
+            "description": "Internal Server Error. Failed to delete tag."
+          }
+        }
+      }
+    },
+    "/api/thumbs/{id}": {
+      "get": {
+        "summary": "Get Thumbnail by Id",
+        "description": "Retrieve a thumbnail by its ID.",
+        "tags": [
+          "Thumbnails"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the thumbnail to retrieve."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with the thumbnail image.",
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found. The requested thumbnail ID does not exist."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LogItem": {
+        "type": "object",
+        "properties": "// Define properties of LogItem here"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Files",
+      "description": "API for managing files"
+    },
+    {
+      "name": "Logs",
+      "description": "API for managing log records"
+    },
+    {
+      "name": "Search",
+      "description": "API for searching documents"
+    }
+  ]
+}

@@ -9,6 +9,9 @@ RUN apk add --no-cache curl
 COPY package*.json ./
 RUN npm ci
 
+# Swagger for api documentation
+COPY swagger.json ./
+
 COPY src/ src/
 
 CMD npm start

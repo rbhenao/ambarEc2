@@ -92,6 +92,31 @@ export default ({ storage }) => {
     /**     
      * Get Statistics     
      */
+    /**
+     * @swagger
+     * /api/stats:
+     *   get:
+     *     summary: Get Statistics
+     *     description: Retrieve statistics related to document processing, content types, and processing rates.
+     *     tags:
+     *       - Stats
+     *     responses:
+     *       200:
+     *         description: Successful response with combined statistics.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 contentType:
+     *                   type: object
+     *                 procRate:
+     *                   type: object
+     *                 procTotal:
+     *                   type: object
+     *       500:
+     *         description: Internal Server Error. Failed to retrieve statistics.
+     */
     api.get('/', (req, res, next) => {
         EsProxy.getStats(storage.elasticSearch)
             .then(response => res.status(200).json(esStatsToView(response.aggregations)))
@@ -100,6 +125,24 @@ export default ({ storage }) => {
 
     /**     
      * Get Combined Statistics     
+     */
+    /**
+     * @swagger
+     * /api/stats/combined:
+     *   get:
+     *     summary: Get Combined Statistics
+     *     description: Retrieve combined statistics for files based on a query.
+     *     tags:
+     *       - Stats
+     *     responses:
+     *       200:
+     *         description: Successful response with combined statistics.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *       500:
+     *         description: Internal Server Error. Failed to retrieve combined statistics.
      */
     api.get('/combined', (req, res, next) => {
         let parsedQuery = QueryParser.parseEsStringQuery('*')
@@ -110,7 +153,25 @@ export default ({ storage }) => {
     })
 
     /**     
-     * Get Combined Statistics     
+     * Get Processing
+     */
+    /**
+     * @swagger
+     * /api/stats/processing:
+     *   get:
+     *     summary: Get Processing Statistics
+     *     description: Retrieve statistics related to document processing based on a query.
+     *     tags:
+     *       - Stats
+     *     responses:
+     *       200:
+     *         description: Successful response with processing statistics.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *       500:
+     *         description: Internal Server Error. Failed to retrieve processing statistics.
      */
     api.get('/processing', (req, res, next) => {
         let parsedQuery = QueryParser.parseEsStringQuery('*')

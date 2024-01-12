@@ -33,6 +33,33 @@ export default ({ storage }) => {
 ]
      * 
      */
+    /**
+     * @swagger
+     * /api/tags:
+     *   get:
+     *     summary: Get Tags
+     *     description: Retrieve a list of tags along with the count of associated files.
+     *     tags:
+     *       - Tags
+     *     responses:
+     *       200:
+     *         description: Successful response with an array of tags and their associated file counts.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: array
+     *               items:
+     *                 type: object
+     *                 properties:
+     *                   name:
+     *                     type: string
+     *                     description: The name of the tag.
+     *                   filesCount:
+     *                     type: integer
+     *                     description: The count of files associated with the tag.
+     *       500:
+     *         description: Internal Server Error. Failed to retrieve tags.
+     */
     api.get('/', (req, res, next) => {
         CacheProxy.getTags(storage.redis, storage.elasticSearch)
             .then(tags => {
@@ -71,6 +98,52 @@ export default ({ storage }) => {
    }
         * 
         */
+    /**
+     * @swagger
+     * /api/tags/{fileId}/{tagType}/{tagName}:
+     *   post:
+     *     summary: Add Tag For File
+     *     description: Add a tag for a specific file.
+     *     tags:
+     *       - Tags
+     *     parameters:
+     *       - in: path
+     *         name: fileId
+     *         required: true
+     *         schema:
+     *           type: string
+     *         description: The ID of the file to add the tag to.
+     *       - in: path
+     *         name: tagType
+     *         required: true
+     *         schema:
+     *           type: string
+     *         description: The type of the tag to add.
+     *       - in: path
+     *         name: tagName
+     *         required: true
+     *         schema:
+     *           type: string
+     *         description: The name of the tag to add.
+     *     requestBody:
+     *       required: false
+     *     responses:
+     *       200:
+     *         description: Successful response with updated tags.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 tags:
+     *                   type: array
+     *                   items:
+     *                     type: object
+     *       400:
+     *         description: Bad Request. Required field is missing or invalid tag type.
+     *       500:
+     *         description: Internal Server Error. Failed to add tag.
+     */
     api.post('/:fileId/:tagType/:tagName', (req, res, next) => {
         const { params: { fileId, tagType, tagName } } = req
 
@@ -123,6 +196,50 @@ export default ({ storage }) => {
  }   
       * 
       */
+    /**
+     * @swagger
+     * /api/tags/{fileId}/{tagType}/{tagName}:
+     *   delete:
+     *     summary: Delete Tag From File
+     *     description: Delete a tag from a specific file.
+     *     tags:
+     *       - Tags
+     *     parameters:
+     *       - in: path
+     *         name: fileId
+     *         required: true
+     *         schema:
+     *           type: string
+     *         description: The ID of the file to delete the tag from.
+     *       - in: path
+     *         name: tagType
+     *         required: true
+     *         schema:
+     *           type: string
+     *         description: The type of the tag to delete.
+     *       - in: path
+     *         name: tagName
+     *         required: true
+     *         schema:
+     *           type: string
+     *         description: The name of the tag to delete.
+     *     responses:
+     *       200:
+     *         description: Successful response with updated tags.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 tags:
+     *                   type: array
+     *                   items:
+     *                     type: object
+     *       400:
+     *         description: Bad Request. Required field is missing.
+     *       500:
+     *         description: Internal Server Error. Failed to delete tag.
+     */
     api.delete('/:fileId/:tagType/:tagName', (req, res, next) => {
         const { params: { fileId, tagType, tagName } } = req
 

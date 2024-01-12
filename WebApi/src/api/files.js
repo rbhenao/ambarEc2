@@ -26,8 +26,45 @@ const generateFileId = (source_id, full_name) => {
 
 const generateExtractedTextFileName = (sha) => `text_${sha}`
 
+/**
+ * @swagger
+ * tags:
+ *   - name: Files
+ *     description: API for managing files
+ */
+
 export default ({ storage }) => {
     let api = Router()
+    
+    /**
+     * @swagger
+     * /api/files/download:
+     *   get:
+     *     summary: Download file by SHA or URL
+     *     description: Download a file by its SHA or URL.
+     *     tags:
+     *       - Files
+     *     parameters:
+     *       - in: query
+     *         name: path
+     *         description: Path to the file (for URLs).
+     *         required: false
+     *         schema:
+     *           type: string
+     *       - in: query
+     *         name: sha
+     *         description: SHA256 hash of the file.
+     *         required: false
+     *         schema:
+     *           type: string
+     *     responses:
+     *       200:
+     *         description: File download successful.
+     *       400:
+     *         description: Bad request.
+     *       404:
+     *         description: File content not found.
+     */
 
     api.get('/download', (req, res, next) => {
         const filePath = req.query.path
@@ -99,6 +136,30 @@ export default ({ storage }) => {
       * @apiErrorExample {json} HTTP/1.1 404 Not Found
       * File meta or content not found
       */
+
+    /**
+     * @swagger
+     * /api/files/{id}:
+     *   get:
+     *     summary: Download file by file ID
+     *     description: Download a file by its ID.
+     *     tags:
+     *       - Files
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         description: File ID.
+     *         required: true
+     *         schema:
+     *           type: string
+     *     responses:
+     *       200:
+     *         description: File download successful.
+     *       400:
+     *         description: Uri is broken.
+     *       404:
+     *         description: File meta not found or file content not found.
+     */
     api.get('/:id', (req, res, next) => {
         const uri = req.params.id
 
@@ -156,6 +217,30 @@ export default ({ storage }) => {
       * @apiErrorExample {json} HTTP/1.1 404 Not Found
       * File meta or content not found
       */
+
+    /**
+     * @swagger
+     * /api/files/{id}/text:
+     *   get:
+     *     summary: Download parsed text by file ID
+     *     description: Download parsed text of a file by its ID.
+     *     tags:
+     *       - Files
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         description: File ID.
+     *         required: true
+     *         schema:
+     *           type: string
+     *     responses:
+     *       200:
+     *         description: Parsed text download successful.
+     *       400:
+     *         description: Uri is broken.
+     *       404:
+     *         description: File meta not found or parsed content not found.
+     */
     api.get('/:id/text', (req, res, next) => {
         const uri = req.params.id
 
@@ -226,6 +311,48 @@ export default ({ storage }) => {
         * @apiErrorExample {json} HTTP/1.1 404 Not Found
         * File meta or content not found
         */
+
+    /**
+     * @swagger
+     * /api/files/uiupload/{fileName}:
+     *   post:
+     *     summary: Upload file from UI
+     *     description: Upload a file from the UI.
+     *     tags:
+     *       - Files
+     *     parameters:
+     *       - in: path
+     *         name: fileName
+     *         description: Name of the file.
+     *         required: true
+     *         schema:
+     *           type: string
+     *     requestBody:
+     *       description: File to upload.
+     *       required: true
+     *       content:
+     *         multipart/form-data:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               file:
+     *                 type: string
+     *                 format: binary
+     *     responses:
+     *       200:
+     *         description: File upload successful.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 fileId:
+     *                   type: string
+     *       400:
+     *         description: Wrong request data.
+     *       404:
+     *         description: File meta or content not found.
+     */
     api.post('/uiupload/:fileName', FileUploader, (req, res, next) => {
         let { params: { fileName: fileName }, files } = req
 
@@ -275,6 +402,27 @@ export default ({ storage }) => {
         * @apiErrorExample {json} HTTP/1.1 404 NotFound
         * File not found
         */
+    /**
+     * @swagger
+     * /api/files/hide/{fileId}:
+     *   put:
+     *     summary: Hide file by file ID
+     *     description: Hide a file by its ID.
+     *     tags:
+     *       - Files
+     *     parameters:
+     *       - in: path
+     *         name: fileId
+     *         description: File ID.
+     *         required: true
+     *         schema:
+     *           type: string
+     *     responses:
+     *       200:
+     *         description: File hide successful.
+     *       404:
+     *         description: File not found.
+     */
     api.put('/hide/:fileId', (req, res, next) => {
         const fileId = req.params.fileId
 
@@ -307,6 +455,27 @@ export default ({ storage }) => {
         * @apiErrorExample {json} HTTP/1.1 404 NotFound
         * File not found
         */
+    /**
+     * @swagger
+     * /api/files/unhide/{fileId}:
+     *   put:
+     *     summary: Unhide file by file ID
+     *     description: Unhide a file by its ID.
+     *     tags:
+     *       - Files
+     *     parameters:
+     *       - in: path
+     *         name: fileId
+     *         description: File ID.
+     *         required: true
+     *         schema:
+     *           type: string
+     *     responses:
+     *       200:
+     *         description: File unhide successful.
+     *       404:
+     *         description: File not found.
+     */
     api.put('/unhide/:fileId', (req, res, next) => {
         const fileId = req.params.fileId
 

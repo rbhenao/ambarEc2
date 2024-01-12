@@ -7,7 +7,8 @@
     "dev": "nodemon -w src src/index.js",
     "lint": "eslint --ext js src",
     "start": "node src/index.js",
-    "docs": "apidoc -i src/api -o doc/ && apidoc-markdown -p doc/ -o API_DOC.md"
+    "docs": "apidoc -i src/api -o doc/ && apidoc-markdown -p doc/ -o API_DOC.md",
+    "swaggerdocs": "node --loader ts-node/esm swaggerOptions.js"
   },
   "type": "module",
   "author": "RD17 <hello@ambar.cloud>",
@@ -24,11 +25,15 @@
     "mongodb": "^4.9.0",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "redis": "^4.3.0"
+    "redis": "^4.3.0",
+    "swagger-jsdoc": "^6.0.0",
+    "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
     "eslint": "^8.22.0",
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.19",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": "16",
