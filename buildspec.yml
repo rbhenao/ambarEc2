@@ -3,6 +3,11 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - echo test run!
-      - cp .env.local .env
+      - echo setting up env script...
+      - |
+        cat <<EOF | ./envsetup.sh
+        y
+        $AMBAR_HOST_ADDRESS
+        $AMBAR_API_ADDRESS
+        EOF
       - cat .env
