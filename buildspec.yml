@@ -4,3 +4,5 @@ phases:
   pre_build:
     commands:
       - echo test run!
+      - cp .env.local .env
+      - cat .env
