@@ -4,10 +4,13 @@ phases:
   pre_build:
     commands:
       - echo setting up env script...
+      - cd ec2
       - |
-        cd ec2 && cat <<EOF | ./envsetup.sh
+        cat <<EOF | ./envsetup.sh
         y
         $AMBAR_HOST_ADDRESS
         $AMBAR_API_ADDRESS
         EOF
-      - cd .. && cat .env
+      - cd ..
+      - docker-compose build 
+      - docker images
