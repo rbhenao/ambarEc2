@@ -12,5 +12,7 @@ phases:
         $AMBAR_API_ADDRESS
         EOF
       - cd ..
-      - docker-compose build 
-      - docker images
+  build:
+    commands:
+      - echo building docker images
+      - ./push2ecr.sh
