@@ -10,4 +10,4 @@ phases:
         $AMBAR_HOST_ADDRESS
         $AMBAR_API_ADDRESS
         EOF
-      - cat .env
+      - cd .. && cat .env
