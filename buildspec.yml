@@ -5,7 +5,7 @@ phases:
     commands:
       - echo setting up env script...
       - |
-        cat <<EOF | ./envsetup.sh
+        cd ec2 && cat <<EOF | ./envsetup.sh
         y
         $AMBAR_HOST_ADDRESS
         $AMBAR_API_ADDRESS
