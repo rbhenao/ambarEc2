@@ -19,7 +19,7 @@ phases:
   post_build:
     commands:
       - echo zipping artifacts
-      - tar -czf docker-compose-files.tar.gz docker-compose.yml .env appspec.yml ec2/deployScripts/deploy.sh
+      - tar -czf docker-compose-files.tar.gz docker-compose.yml .env appspec.yml -C ec2/deployScripts deploy.sh
 artifacts:
   files:
     - 'docker-compose-files.tar.gz'
