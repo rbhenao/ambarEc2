@@ -20,7 +20,6 @@ phases:
     commands:
       - echo zipping artifacts
       - tar -czf docker-compose-files.tar.gz docker-compose.yml .env
-      - mv docker-compose-files.tar.gz $CODEBUILD_ARTIFACTS_DIR
 artifacts:
   files:
     - 'docker-compose-files.tar.gz'
