@@ -16,3 +16,9 @@ phases:
     commands:
       - echo building docker images
       - ./push2ecr.sh
+  artifacts:
+    files:
+      - 'docker-compose.yml'
+      - '.env'
+    name: docker-compose-files
+    discard-paths: no
