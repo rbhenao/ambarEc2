@@ -1,0 +1,11 @@
+version: 0.0
+os: linux
+files:
+  - source: docker-compose.yml
+    destination: /home/ec2-user
+  - source: .env
+    destination: /home/ec2-user
+file_exists_behavior: OVERWRITE
+hooks: 
+  ApplicationStart:
+      - location: deploy.sh
