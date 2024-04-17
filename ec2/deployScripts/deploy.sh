@@ -1,3 +1,3 @@
 #!/bin/bash
 
-echo "test deploy!"
+docker-compose up -d
