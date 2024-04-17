@@ -16,9 +16,13 @@ phases:
     commands:
       - echo building docker images
       - ./push2ecr.sh
+  post_build:
+    commands:
+      - echo zipping artifacts
+      - tar -czf docker-compose-files.tar.gz docker-compose.yml .env
+      - mv docker-compose-files.tar.gz $CODEBUILD_ARTIFACTS_DIR
 artifacts:
   files:
-    - 'docker-compose.yml'
-    - '.env'
+    - 'docker-compose-files.tar.gz'
   name: docker-compose-files
   discard-paths: no
