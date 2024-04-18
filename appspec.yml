@@ -5,7 +5,11 @@ files:
     destination: /home/ec2-user
   - source: .env
     destination: /home/ec2-user
+  - source: deploy.sh
+    destination: /home/ec2-user
 file_exists_behavior: OVERWRITE
 hooks: 
   ApplicationStart:
       - location: deploy.sh
+        run_as: ec2-user
+        working_directory: /home/ec2-user
