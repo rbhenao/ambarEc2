@@ -1,7 +1,6 @@
 #!/bin/bash
 
-mkdir -p /home/ec2-user/deploy
-cd /home/ec2-user/deploy
+cd /home/ec2-user
 source .env
 
 # Create directories needed by app
