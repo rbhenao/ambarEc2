@@ -1,0 +1,126 @@
+version: "2.1"
+networks:
+  internal_network:
+services:
+  db:
+    restart: unless-stopped
+    networks:
+      - internal_network
+    image: ${ambarEc2_db}
+    volumes:
+      - ${dataPath}/db:/data/db
+  es:
+    restart: unless-stopped
+    networks:
+      - internal_network
+    image: ${ambarEc2_es}
+    environment:
+      - cluster.name=ambar-es
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+  rabbit:
+    restart: unless-stopped
+    networks:
+      - internal_network
+    image: ${ambarEc2_rabbit}
+    hostname: rabbit
+    expose:
+      - "15672"
+      - "5672"
+    volumes:
+      - ${dataPath}/rabbit:/var/lib/rabbitmq
+  redis:
+    restart: unless-stopped
+    sysctls:
+      - net.core.somaxconn=1024
+    networks:
+      - internal_network
+    image: ${ambarEc2_redis}
+  serviceapi:
+    depends_on:
+      redis:
+        condition: service_healthy
+      rabbit:
+        condition: service_healthy
+      es:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - internal_network
+    image: ${ambarEc2_serviceapi}
+    expose:
+      - "8081"
+    environment:
+      - mongoDbUrl=mongodb://db:27017/
+      - elasticSearchUrl=http://es:9200
+      - redisHost=redis
+      - redisPort=6379
+      - rabbitHost=amqp://rabbit
+      - langAnalyzer=${langAnalyzer}
+  webapi:
+    depends_on:
+      serviceapi:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - internal_network
+    image: ${ambarEc2_webapi}
+    ports:
+      - ${localAddress}:8080:8080
+    environment:
+      - uiLang=en
+      - mongoDbUrl=mongodb://db:27017/
+      - elasticSearchUrl=http://es:9200
+      - redisHost=redis
+      - redisPort=6379
+      - rabbitHost=amqp://rabbit
+      - origin=${ambarHostAddress}
+      - defaultProtocol=${defaultProtocol}
+  frontend:
+    depends_on:
+      webapi:
+        condition: service_healthy
+    image: ${ambarEc2_frontend}
+    restart: unless-stopped
+    networks:
+      - internal_network
+    ports:
+      - ${localAddress}:80:80
+    expose:
+      - "80"
+    environment:
+      - api=${ambarApiFullAddress}
+  pipeline0:
+    depends_on:
+      serviceapi:
+        condition: service_healthy
+    image: ${ambarEc2_pipeline0}
+    restart: unless-stopped
+    networks:
+      - internal_network
+    environment:
+      - id=0
+      - api_url=http://serviceapi:8081
+      - rabbit_host=rabbit
+  crawler0:
+    depends_on: 
+      serviceapi: 
+        condition: service_healthy 
+    image: ${ambarEc2_crawler0}
+    restart: unless-stopped
+    networks:
+      - internal_network
+    environment:
+      - name=${crawlerName}
+    volumes:
+      - ${pathToCrawl}:/usr/data
