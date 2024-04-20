@@ -15,9 +15,9 @@ phases:
   build:
     commands:
       - echo building docker images
-      - ./push2ecr.sh
+      # - ./push2ecr.sh
   post_build:
-    commands: >
+    commands:
       - echo zipping artifacts
       - >
         tar -czf docker-compose-files.tar.gz
