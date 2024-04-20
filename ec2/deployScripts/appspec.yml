@@ -1,0 +1,33 @@
+version: 0.0
+os: linux
+files:
+  - source: install_deps.sh
+    destination: /home/ec2-user
+  - source: install_docker.sh
+    destination: /home/ec2-user
+  - source: install_docker_compose.sh
+    destination: /home/ec2-user
+  - source: kernelsettings.sh
+    destination: /home/ec2-user
+  - source: install_aws_cli.sh
+    destination: /home/ec2-user
+  - source: mkdirs.sh
+    destination: /home/ec2-user
+  - source: .env
+    destination: /home/ec2-user
+  - source: deploy.sh
+    destination: /home/ec2-user
+  - source: docker-compose-production.yml
+    destination: /home/ec2-user
+  - source: appspec.yml
+    destination: /home/ec2-user
+file_exists_behavior: OVERWRITE
+hooks: 
+  AfterInstall:
+    - location: install_deps.sh
+      runas: ec2-user
+      working_directory: /home/ec2-user
+  ApplicationStart:
+    - location: deploy.sh
+      runas: ec2-user
+      working_directory: /home/ec2-user

@@ -1,7 +1,18 @@
 #!/bin/bash
 
+# Add ~/.local/bin to PATH
+mkdir -p ~/.local/bin
+export PATH=~/.local/bin:$PATH
+
+whoami
+
+# Set up deploy directory
 cd /home/ec2-user
+echo "Deploying from $(pwd)"
+
 source .env
+echo "Using ENV file:"
+cat .env
 
 # Create directories needed by app
 mkdir -p ${dataPath}
