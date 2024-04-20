@@ -19,18 +19,18 @@ phases:
   post_build:
     commands: >
       - echo zipping artifacts
-      - > 
+      - >
         tar -czf docker-compose-files.tar.gz
         docker-compose-production.yml
-          .env
-          appspec.yml
-          -C ec2/ deploy.sh
-          install_deps.sh
-          install_docker.sh
-          install_docker_compose.sh
-          install_aws_cli.sh
-          kernelsettings.sh
-          mkdirs.sh
+        .env
+        appspec.yml
+        -C ec2/ deploy.sh
+        install_deps.sh
+        install_docker.sh
+        install_docker_compose.sh
+        install_aws_cli.sh
+        kernelsettings.sh
+        mkdirs.sh
 artifacts:
   files:
     - 'docker-compose-files.tar.gz'
