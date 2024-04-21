@@ -4,8 +4,6 @@
 mkdir -p ~/.local/bin
 export PATH=~/.local/bin:$PATH
 
-whoami
-
 # Set up deploy directory
 cd /home/ec2-user
 echo "Deploying from $(pwd)"
