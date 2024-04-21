@@ -23,8 +23,7 @@ phases:
         tar -czf docker-compose-files.tar.gz
         docker-compose-production.yml
         .env
-        -C ec2/ deploy.sh
-        install_docker.sh
+        -C ec2/ install_docker.sh
         install_docker_compose.sh
         install_aws_cli.sh
         kernelsettings.sh
