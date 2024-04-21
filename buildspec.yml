@@ -23,7 +23,6 @@ phases:
         tar -czf docker-compose-files.tar.gz
         docker-compose-production.yml
         .env
-        appspec.yml
         -C ec2/ deploy.sh
         install_deps.sh
         install_docker.sh
@@ -34,5 +33,6 @@ phases:
 artifacts:
   files:
     - 'docker-compose-files.tar.gz'
-  name: docker-compose-files
+    - 'appspec.yml'
+  name: deploy-files
   discard-paths: no
