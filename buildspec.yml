@@ -24,7 +24,6 @@ phases:
         docker-compose-production.yml
         .env
         -C ec2/ deploy.sh
-        install_deps.sh
         install_docker.sh
         install_docker_compose.sh
         install_aws_cli.sh
@@ -34,5 +33,6 @@ artifacts:
   files:
     - 'docker-compose-files.tar.gz'
     - 'appspec.yml'
+    - 'install_deps.sh'
   name: deploy-files
   discard-paths: no

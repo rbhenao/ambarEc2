@@ -2,6 +2,8 @@
 
 cd /home/ec2-user
 
+tar -xzf docker-compose-files.tar.gz .
+
 echo "RUNNING install_docker.sh"
 source install_docker.sh
 
