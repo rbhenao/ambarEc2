@@ -34,5 +34,6 @@ artifacts:
     - 'docker-compose-files.tar.gz'
     - 'appspec.yml'
     - 'install_deps.sh'
+    - 'deploy.sh'
   name: deploy-files
   discard-paths: no
